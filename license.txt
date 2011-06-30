@@ -1,0 +1,10 @@
+Author: Christoph Jansen
+Tutor: Christian Bettinger
+
+License: CC BY-NC 3.0 - http://creativecommons.org/licenses/by-nc/3.0/de/
+
+This game has been created during the media project of "Computer Science - Digital Media and Games" at Fachhochschule Trier in summer 2011.
+
+Thanks to Nik Coughlin of http://informationage.co.nz/ for the fonts.
+Thanks to Xero Harrison of http://fontvir.us for the fonts.
+Thanks to HardPCM of http://hardpcmtechnologies.blogspot.com/ for the sounds.

@@ -12,6 +12,7 @@ import javafx.scene.text.Font;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.Group;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.control.Label;
 
 var showCredits = false;
 var showMainMenu = true;
@@ -57,7 +58,7 @@ Stage {
                             top: 50
                             left: 40
                         }
-                        spacing: 30
+                        spacing: 20
                         content: [
                             Text {
                                 content: "Block Invaders fx"
@@ -68,48 +69,65 @@ Stage {
                             }
                             VBox {
                                 padding: Insets {
-                                    top: 40
+                                    top: 20
                                 }
 
                                 spacing: 20
                                 content: [
-                                    Text {
-                                        content: "Author: Christoph Jansen"
-                                        fill: Color.WHITE
-                                        stroke: Color.WHITE
-                                        strokeWidth: 0
+                                    Label {
+                                        text: "Author: Christoph Jansen"
                                         font: Font { name: "Arial" size: 24 }
+                                        textFill: Color.WHITE
                                     }
-                                    Text {
-                                        content: "Projektbetreuer: Christian Bettinger"
-                                        fill: Color.WHITE
-                                        stroke: Color.WHITE
-                                        strokeWidth: 0
-                                        font: Font { name: "Arial" size: 24 }
+                                    Label {
+                                        text: "Tutor: Christian Bettinger"
+                                        font: Font { name: "Arial" size: 18 }
+                                        textFill: Color.WHITE
                                     }
                                 ]
                             }
                             VBox {
+                                spacing: 10,
                                 content: [
-                                    Text {
-                                        content: "Das Spiel ist im Rahmen des Medienprojekts"
-                                        fill: Color.WHITE
-                                        stroke: Color.WHITE
-                                        strokeWidth: 0
-                                        font: Font { name: "Arial" size: 16 }
+                                    Label {
+                                        text: "License: CC BY-NC 3.0 - http://creativecommons.org/licenses/by-nc/3.0/de/"
+                                        font: Font { name: "Arial" size: 14 }
+                                        textFill: Color.WHITE
                                     }
-                                    Text {
-                                        content: "der Fachhochschule Trier im SS2011 entstanden."
-                                        fill: Color.WHITE
-                                        stroke: Color.WHITE
-                                        strokeWidth: 0
-                                        font: Font { name: "Arial" size: 16 }
+                                    VBox {
+                                        content: [
+                                            Label {
+                                                text: "This game has been created during the media project of \"Computer Science -"
+                                                font: Font { name: "Arial" size: 14 }
+                                                textFill: Color.WHITE
+                                            }
+                                            Label {
+                                                text: "Digital Media and Games\" at Fachhochschule Trier in summer 2011."
+                                                font: Font { name: "Arial" size: 14 }
+                                                textFill: Color.WHITE
+                                            }
+                                        ]
+                                    }
+                                    Label {
+                                        text: "Thanks to Nik Coughlin of http://informationage.co.nz/ for the fonts."
+                                        font: Font { name: "Arial" size: 14 }
+                                        textFill: Color.WHITE
+                                    }
+                                    Label {
+                                        text: "Thanks to Xero Harrison of http://fontvir.us for the fonts."
+                                        font: Font { name: "Arial" size: 14 }
+                                        textFill: Color.WHITE
+                                    }
+                                    Label {
+                                        text: "Thanks to HardPCM of http://hardpcmtechnologies.blogspot.com/ for the sounds."
+                                        font: Font { name: "Arial" size: 14 }
+                                        textFill: Color.WHITE
                                     }
                                 ]
                             }
                             VBox {
                                 padding: Insets {
-                                    top: 100
+                                    top: 55
                                 }
 
                                 content: [
@@ -492,8 +510,8 @@ Stage {
                                 content: [
                                     Text {
                                         content: "Yes"
-                                        fill: Color.WHITE
-                                        stroke: Color.WHITE
+                                        fill: Color.RED
+                                        stroke: Color.RED
                                         strokeWidth: 0
                                         font: Font { name: "Courier New" size: 27 }
                                         onMousePressed: function(e: MouseEvent): Void {
@@ -505,8 +523,8 @@ Stage {
                                     }
                                     Text {
                                         content: "No"
-                                        fill: Color.WHITE
-                                        stroke: Color.WHITE
+                                        fill: Color.RED
+                                        stroke: Color.RED
                                         strokeWidth: 0
                                         font: Font { name: "Courier New" size: 27 }
                                         onMousePressed: function(e: MouseEvent): Void {
