@@ -64,6 +64,26 @@ public class Model {
             };
 
     public function loadHighscore(): Void {
+        var getScore:String = PhpIO.getScore();
+        var getArray = getScore.toCharArray();
+        var values:String[];
+        var counter = 0;;
+        var single:StringBuffer = new StringBuffer();
+        for(i in [0..getScore.length()-1]){
+            if(counter < 60){
+                if(getArray[i].toString().contentEquals(" ")){
+                    values[counter] = single.toString();
+                    single = new StringBuffer();
+                    ++counter;
+                }
+                else{
+                    single.append(getArray[i]);
+                }
+            }
+            else{
+                break;
+            }
+        }
         var helpArray: HighscoreItem[];
         for (i in [0..9]) {
             helpArray[i] = HighscoreItem {};
@@ -72,26 +92,22 @@ public class Model {
         highscore.setPointScore(helpArray);
         highscore.setTimeScore(helpArray);
 
-        if (HighscoreIO.loadProperties("highscore.hs", props)) {
+        if (values != null) {
             var pointArray: HighscoreItem[];
             var timeArray: HighscoreItem[];
             var foo: Integer = 0;
 
             for (i in [0..9]) {
-                foo = i;
+                foo = i*3;
                 pointArray[i] = HighscoreItem {};
-                pointArray[i].setName(props.get(foo.toString()));
-                foo += 10;
-                pointArray[i].setPoints(Integer.parseInt(props.get(foo.toString())));
-                foo += 10;
-                pointArray[i].setTime(Long.parseLong(props.get(foo.toString())));
-                foo += 10;
+                pointArray[i].setName(values[foo]);
+                pointArray[i].setPoints(values[foo+1]);
+                pointArray[i].setTime(values[foo+2]);
+                foo += 30;
                 timeArray[i] = HighscoreItem {};
-                timeArray[i].setName(props.get(foo.toString()));
-                foo += 10;
-                timeArray[i].setPoints(Integer.parseInt(props.get(foo.toString())));
-                foo += 10;
-                timeArray[i].setTime(Long.parseLong(props.get(foo.toString())));
+                timeArray[i].setName(values[foo]);
+                timeArray[i].setPoints(values[foo+1]);
+                timeArray[i].setTime(values[foo+2]);
             }
             highscore.setPointScore(pointArray);
             highscore.setTimeScore(timeArray);
@@ -99,83 +115,13 @@ public class Model {
     }
 
     public function saveHighscore() {
-        var helpItem = HighscoreItem {};
-        helpItem.setName(noSpaceString(playerBox.rawText));
-        helpItem.setPoints(points);
-        helpItem.setTime(this.secondsRunning);
-        var pointArray: HighscoreItem[] = highscore.getPointScore();
-        var timeArray: HighscoreItem[] = highscore.getTimeScore();
-        var newHS = false;
-
-        if (helpItem.getPoints() > pointArray[0].getPoints()) {
-            pointArray[0] = helpItem;
-            newHS = true;
-        }
-        if (helpItem.getTime() > timeArray[0].getTime()) {
-            timeArray[0] = helpItem;
-            newHS = true;
-        }
-
-        if (newHS) {
-            if (soundOn) {
-                this.setMedia(null);
-                this.setMedia(this.getSounds()[2]);
-                this.getPlayer().play();
-            }
-            var tempItem: HighscoreItem;
-
-            for (i in [0..9]) {
-                if (pointArray[i].getPoints() > pointArray[i + 1].getPoints()) {
-                    tempItem = pointArray[i];
-                    pointArray[i] = pointArray[i + 1];
-                    pointArray[i + 1] = tempItem;
-                }
-                if (timeArray[i].getTime() > timeArray[i + 1].getTime()) {
-                    tempItem = timeArray[i];
-                    timeArray[i] = timeArray[i + 1];
-                    timeArray[i + 1] = tempItem;
-                }
-            }
-            highscore.setPointScore(pointArray);
-            highscore.setTimeScore(timeArray);
-
-            var foo = 0;
-            for (i in [0..9]) {
-                foo = i;
-                props.put(foo.toString(), pointArray[i].getName());
-                foo += 10;
-                props.put(foo.toString(), pointArray[i].getPoints().toString());
-                foo += 10;
-                props.put(foo.toString(), pointArray[i].getTime().toString());
-                foo += 10;
-                props.put(foo.toString(), timeArray[i].getName());
-                foo += 10;
-                props.put(foo.toString(), timeArray[i].getPoints().toString());
-                foo += 10;
-                props.put(foo.toString(), timeArray[i].getTime().toString());
-            }
-            HighscoreIO.saveProperties("highscore.hs", props);
-        }
-    }
-
-    public function resetHighscore() {
-        var foo = 0;
-        for (i in [0..9]) {
-            foo = i;
-            props.put(foo.toString(), "Player");
-            foo += 10;
-            props.put(foo.toString(), "0");
-            foo += 10;
-            props.put(foo.toString(), "0");
-            foo += 10;
-            props.put(foo.toString(), "Player");
-            foo += 10;
-            props.put(foo.toString(), "0");
-            foo += 10;
-            props.put(foo.toString(), "0");
-        }
-        HighscoreIO.saveProperties("highscore.hs", props);
-        loadHighscore();
+        var keysAndValues:String = "name=";
+        keysAndValues += NameCheck.checker(playerBox.rawText);
+        keysAndValues += "&points=";
+        keysAndValues += points.toString();
+        keysAndValues += "&time=";
+        keysAndValues += secondsRunning.toString();
+        PhpIO.putScore(keysAndValues);
     }
 
     function preMatch(box: BoxNode) {
@@ -774,7 +720,8 @@ public class Model {
     }
 
     public function addTime() {
-        timeString = timeToString(++secondsRunning);
+        ++secondsRunning;
+        timeString = timeToString(secondsRunning.toString());
     }
 
     public function decreaseDownTime(): Boolean {
@@ -845,41 +792,8 @@ public class Model {
         return bar;
     }
 
-    public function noSpaceString(string: String): String {
-        var help = string;
-        var secondHelp = "";
-        var thirdHelp: String;
-        var char: Character[];
-        var spaceChar = "_";
-        if (help.contentEquals("")) {
-            secondHelp = "Player";
-        } else {
-            if (help.length() <= 10) {
-                for (i in [0..help.length() - 1]) {
-                    char[i] = help.charAt(i);
-                    thirdHelp = char[i].toString();
-                    if (thirdHelp.contentEquals(" ")) {
-                        secondHelp += "_";
-                    } else {
-                        secondHelp += thirdHelp;
-                    }
-                }
-            } else {
-                for (i in [0..9]) {
-                    char[i] = help.charAt(i);
-                    thirdHelp = char[i].toString();
-                    if (thirdHelp.contentEquals(" ")) {
-                        secondHelp += "_";
-                    } else {
-                        secondHelp += thirdHelp;
-                    }
-                }
-            }
-        }
-        return secondHelp;
-    }
-
-    public function timeToString(time: Long): String {
+    public function timeToString(stringTime: String): String {
+        var time = Integer.parseInt(stringTime);
         var secondsString: String = "0";
         var minutesString: String = "0";
         var foo = time mod 60;
@@ -1072,5 +986,4 @@ public class Model {
     public function setSpecialFive(specialFive: Integer): Void {
         this.specialFive = specialFive;
     }
-
 }

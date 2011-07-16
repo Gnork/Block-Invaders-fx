@@ -25,9 +25,10 @@ public class ImageNode extends CustomNode {
             imageURL = "{__DIR__}png/blockinvaders_logo.png";
         } else if (type == 2) {
             imageURL = "{__DIR__}png/blockinvaders_highscore.png";
-        } else {
+        } else if(type == 3) {
             imageURL = "{__DIR__}png/blockinvaders_gameover.png";
+        } else {
+            imageURL = "{__DIR__}png/skull.png";
         }
     }
-
 }

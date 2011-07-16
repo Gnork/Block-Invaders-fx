@@ -13,6 +13,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.Group;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.control.Label;
+import java.lang.*;
 
 var showCredits = false;
 var showMainMenu = true;
@@ -20,6 +21,7 @@ var showGame = false;
 var showQuestion = false;
 var showHighScore = false;
 var showGameOver = false;
+var showSkull = false;
 var showThree = false;
 var showTwo = false;
 var showOne = false;
@@ -32,10 +34,12 @@ var blink = true;
 var logo1 = ImageNode { type: 1 };
 var logo2 = ImageNode { type: 2 };
 var logo3 = ImageNode { type: 3 };
+var logo4 = ImageNode { type: 4 };
 
 logo1.colorize();
 logo2.colorize();
 logo3.colorize();
+logo4.colorize();
 var pixelFont: Font = Font {
             name: "Courier New"
             size: 24
@@ -46,7 +50,7 @@ model.preInitialize();
 model.loadHighscore();
 
 Stage {
-    title: "ThreeMatch"
+    title: "Block Invaders fx"
     resizable: false
     height: 50 * 8 + 35 + 78 + 32
     width: 50 * 8 + 35 + 150 + 10
@@ -237,6 +241,9 @@ Stage {
                                         font: Font { name: "Courier New" size: 36 }
                                         onMousePressed: function(e: MouseEvent): Void {
                                             model.saveHighscore();
+                                            //Thread.currentThread().sleep(500);
+                                            model.loadHighscore();
+                                            //Thread.currentThread().sleep(500);
                                             updateTextArray();
                                             showGame = false;
                                             showMainMenu = false;
@@ -422,6 +429,8 @@ Stage {
                                         strokeWidth: 0
                                         font: Font { name: "Courier New" size: 36 }
                                         onMousePressed: function(e: MouseEvent): Void {
+                                            model.loadHighscore();
+                                            //Thread.currentThread().sleep(500);
                                             updateTextArray();
                                             showGame = false;
                                             showMainMenu = false;
@@ -515,7 +524,7 @@ Stage {
                                         strokeWidth: 0
                                         font: Font { name: "Courier New" size: 27 }
                                         onMousePressed: function(e: MouseEvent): Void {
-                                            model.resetHighscore();
+                                            //model.resetHighscore();
                                             updateTextArray();
                                             showQuestion = false;
                                             showHighScore = true;
@@ -684,7 +693,7 @@ Stage {
                                                     showGameOver = false;
                                                 }
                                             }
-                                            Text {
+                                            /*Text {
                                                 content: "Reset"
                                                 fill: Color.RED
                                                 stroke: Color.RED
@@ -694,7 +703,7 @@ Stage {
                                                     showHighScore = false;
                                                     showQuestion = true;
                                                 }
-                                            }
+                                            }*/
                                         ]
                                     }
                                 ]
@@ -766,6 +775,15 @@ Stage {
                     }
                 ]
             }
+
+    var skull = Scene{
+        fill: Color.BLACK
+        content:[
+            logo4
+            ]
+    }
+
+
     var one = Scene {
                 fill: Color.BLACK
                 content: [
@@ -798,7 +816,7 @@ Stage {
                     }
                 ]
             }
-    scene: bind if (showMainMenu) then mainMenu else if (showHighScore) then highscore else if (showGameOver) then gameOver else if (showThree) then three else if (showTwo) then two else if (showOne) then one else if (showCredits) then creditsMenu else if (showQuestion) then question else game
+    scene: bind if (showMainMenu) then mainMenu else if (showHighScore) then highscore else if (showGameOver) then gameOver else if (showThree) then three else if (showTwo) then two else if (showOne) then one else if (showCredits) then creditsMenu else if (showQuestion) then question else if (showSkull) then skull else game
 }
 
 Timeline {
@@ -811,7 +829,10 @@ Timeline {
                     initialized = true;
                 } else if (showMainMenu) {
                     blinkyBill();
+                } else if (showSkull){
+                    skully();
                 }
+
 
                 if (preGame) {
                     pre();
@@ -826,6 +847,18 @@ var timer = millis;
 var match = false;
 var counter = 0;
 var blinkCount = 15;
+var skullCount = 50;
+
+function skully(){
+    if (skullCount > 0) {
+        --skullCount;
+    } else {
+        skullCount = 50;
+        showSkull = false;
+        showGameOver = true;
+    }
+}
+
 
 function blinkyBill() {
     if (blinkCount > 0) {
@@ -1149,7 +1182,8 @@ function updateTime() {
                 and not model.getBool3()
                 and not model.getBool4()
                 and not model.getBool5()
-                and not model.getBool6()) {
+                and not model.getBool6()
+                and not model.getBool7()) {
             finish();
         }
     }
@@ -1245,7 +1279,8 @@ function finish() {
     showHighScore = false;
     showMainMenu = false;
     showGame = false;
-    showGameOver = true;
+    showSkull = true;
+    showGameOver = false;
     initialized = false;
     if (model.soundOn) {
         model.setMedia(null);
@@ -1273,12 +1308,12 @@ function createTextArray() {
 
 function updateTextArray() {
     for (i in [0..9]) {
-        textArray[i].content = model.getHighscore().getPointScore()[9 - i].getName();
-        textArray[i + 10].content = model.getHighscore().getPointScore()[9 - i].getPoints().toString();
-        textArray[i + 20].content = model.timeToString(model.getHighscore().getPointScore()[9 - i].getTime());
-        textArray[i + 30].content = model.getHighscore().getTimeScore()[9 - i].getName();
-        textArray[i + 40].content = model.getHighscore().getTimeScore()[9 - i].getPoints().toString();
-        textArray[i + 50].content = model.timeToString(model.getHighscore().getTimeScore()[9 - i].getTime());
+        textArray[i].content = model.getHighscore().getPointScore()[i].getName();
+        textArray[i + 10].content = model.getHighscore().getPointScore()[i].getPoints();
+        textArray[i + 20].content = model.timeToString(model.getHighscore().getPointScore()[i].getTime());
+        textArray[i + 30].content = model.getHighscore().getTimeScore()[i].getName();
+        textArray[i + 40].content = model.getHighscore().getTimeScore()[i].getPoints();
+        textArray[i + 50].content = model.timeToString(model.getHighscore().getTimeScore()[i].getTime());
     }
 }
 

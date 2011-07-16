@@ -2,13 +2,13 @@
 public class HighscoreItem {
 
     var name: String;
-    var points: Integer;
-    var time: Long;
+    var points: String;
+    var time: String;
 
     init {
         name = "Spieler";
-        points = 0;
-        time = 0;
+        points = "0";
+        time = "0";
     }
 
     public function getName(): String {
@@ -19,19 +19,19 @@ public class HighscoreItem {
         this.name = name;
     }
 
-    public function getPoints(): Integer {
+    public function getPoints(): String {
         return this.points;
     }
 
-    public function setPoints(points: Integer): Void {
+    public function setPoints(points: String): Void {
         this.points = points;
     }
 
-    public function getTime(): Long {
+    public function getTime(): String {
         return this.time;
     }
 
-    public function setTime(time: Long): Void {
+    public function setTime(time: String): Void {
         this.time = time;
     }
 
